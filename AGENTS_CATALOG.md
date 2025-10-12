@@ -447,9 +447,113 @@
 
 ---
 
+### 24. AI GitHub Tutorial Agent
+**役割**: GitHub学習支援の専門家
+
+**機能**:
+- GitHub基礎から応用まで段階的学習ガイド
+- リポジトリ管理のベストプラクティス指導
+- ブランチ戦略（Git Flow、GitHub Flow、Trunk Based Development）説明
+- プルリクエスト・コードレビューの指導
+- GitHub Actions設定とCI/CD構築支援
+- チームコラボレーションワークフロー設計
+- 個別学習ロードマップ生成
+
+**タスクタイプ**:
+- `basics`: Git/GitHub基礎教育（初級/中級/上級）
+- `repository`: リポジトリ管理（README、ライセンス、リリース管理）
+- `branching`: ブランチ戦略とネーミング規則
+- `pr-review`: プルリクエスト作成とコードレビュー
+- `actions`: GitHub Actions とCI/CD自動化
+- `collaboration`: チーム開発とブランチ保護ルール
+- `roadmap`: 個別学習ロードマップ生成
+
+**活用例**:
+- 初心者向けGitHub完全ガイドの提供
+- チームのブランチ戦略策定支援
+- GitHub Actionsワークフロー設計と実装
+- 実務で使える学習ロードマップ作成（Phase 1-4、8-12週間）
+
+**実装ファイル**: `src/agents/education/AIGitHubTutorialAgent.ts`
+
+---
+
+### 25. AI Prompt Engineering Roadmap Agent
+**役割**: プロンプトエンジニアリング学習支援の専門家
+
+**機能**:
+- プロンプトエンジニアリング包括カリキュラム生成
+- スキルレベル評価（初心者/中級者/上級者/エキスパート）
+- 最新技術ガイド（Zero-shot、Few-shot、Chain-of-Thought、RAG、Constitutional AI等）
+- 実践的プロジェクト提案
+- 個別学習ロードマップ作成
+- 練習問題とコーディング演習生成
+- LangChain、LlamaIndex等フレームワーク習得支援
+
+**タスクタイプ**:
+- `curriculum`: レベル別カリキュラム生成（初級/中級/上級）
+- `skill-assessment`: 現在のスキル評価と次のステップ提案
+- `technique-guide`: Chain-of-Thought、Few-shot、RAG等の技術解説
+- `project-suggestion`: レベルに応じた実践プロジェクト提案
+- `roadmap`: ロールベース学習ロードマップ（generalist/developer/researcher/business-analyst）
+- `practice`: 演習問題生成
+- `advanced-topics`: Constitutional AI、Prompt Compression、Multi-Modal Prompting等
+
+**カバーする技術**:
+- 基礎: Zero-shot、Few-shot、Role Prompting
+- 中級: Chain-of-Thought、Prompt Chaining、RAG
+- 上級: Multi-Agent Systems、Reflexion、Constitutional AI
+
+**活用例**:
+- 初心者向け4週間基礎コースの提供
+- 中級者向けLangChain/LlamaIndex習得プログラム
+- 上級者向けプロダクション最適化カリキュラム
+- ロール別（開発者/研究者/アナリスト）のカスタマイズ学習パス
+
+**実装ファイル**: `src/agents/education/AIPromptEngineeringRoadmapAgent.ts`
+
+---
+
+### 26. AI Programming Language Tutor
+**役割**: プログラミング言語教育の専門家
+
+**機能**:
+- 多言語対応（Python、JavaScript、TypeScript、Go、Rust、Java、C++等）
+- 構文・文法の段階的教育
+- 言語別ベストプラクティス指導
+- コードレビューとフィードバック
+- コンセプト・設計パターンの解説
+- アルゴリズムとデータ構造教育
+- デバッグ支援とトラブルシューティング
+- 言語別学習ロードマップ生成
+
+**タスクタイプ**:
+- `syntax-teaching`: 構文教育（変数、関数、クラス等）
+- `best-practices`: 言語別ベストプラクティス（PEP 8、ESLint等）
+- `code-review`: コードレビューとフィードバック
+- `concept-explanation`: クロージャ、デコレータ等の概念解説
+- `algorithm-teaching`: 二分探索、ソート等のアルゴリズム教育
+- `debugging-help`: デバッグ支援とエラー修正案
+- `roadmap`: 言語別学習ロードマップ（3-6ヶ月）
+
+**対応言語の特徴**:
+- **Python**: PEP 8、リスト内包表記、EAFP、デコレータ
+- **JavaScript**: const/let、async/await、Promise、分割代入
+- **TypeScript**: 型システム、インターフェース、ジェネリクス、strictモード
+
+**活用例**:
+- Python初心者向け6週間学習プログラム
+- JavaScript/TypeScript中級者向けベストプラクティス指導
+- アルゴリズム教育（二分探索、ソート等の実装と解説）
+- 言語別ロードマップ（基礎→OOP→実践開発）
+
+**実装ファイル**: `src/agents/education/AIProgrammingLanguageTutor.ts`
+
+---
+
 ## 専門分野特化型
 
-### 24. AI Medical Diagnosis Assistant
+### 27. AI Medical Diagnosis Assistant
 **役割**: 医療診断支援の専門家
 
 **機能**:
@@ -468,7 +572,7 @@
 
 ---
 
-### 25. AI Architect Designer
+### 28. AI Architect Designer
 **役割**: 建築デザインの専門家
 
 **機能**:
@@ -485,7 +589,7 @@
 
 ---
 
-### 26. AI Specialized Translator
+### 29. AI Specialized Translator
 **役割**: 専門分野翻訳の専門家
 
 **機能**:
@@ -527,7 +631,7 @@
 
 ## 実装状況
 
-### 実装済み（14エージェント）
+### 実装済み（17エージェント）
 
 **コアシステム:**
 - ✅ BaseAgent (基底クラス)
@@ -556,11 +660,14 @@
 
 **教育系:**
 - ✅ AI Education Assistant
+- ✅ AI GitHub Tutorial Agent
+- ✅ AI Prompt Engineering Roadmap Agent
+- ✅ AI Programming Language Tutor
 
 **専門分野:**
 - ✅ AI Prompt Engineer
 
-### 未実装（12エージェント）
+### 未実装（9エージェント）
 
 **クリエイティブ系:**
 - 📝 AI Content Creator (動画/音楽)
@@ -586,13 +693,13 @@
 - 📝 AI Specialized Translator
 
 ### 今後の実装予定
-- 📝 残り12のエージェント
+- 📝 残り9のコアエージェント
 - 📝 実際のAI API統合 (OpenAI, Anthropic Claude等)
 - 📝 永続化・ログシステム
 - 📝 Webインターフェース
 - 📝 各エージェント間のより高度な連携機能
 
-**進捗率: 54% (14/26エージェント実装完了)**
+**進捗率: 65% (17/26エージェント実装完了)**
 
 ---
 
@@ -682,35 +789,14 @@
 
 ### 🎓 学習・教育特化系
 
-**37. AI GitHub Tutorial Agent（GitHub使い方エージェント）**
-- GitHub基礎から応用までの学習ガイド
-- リポジトリ管理、ブランチ戦略の説明
-- プルリクエスト、イシュー管理のベストプラクティス
-- GitHub Actions、CI/CD設定支援
-- コラボレーションワークフロー設計
-
-**38. AI Prompt Engineering Roadmap Agent（AIプロンプトエンジニア学習ロードマップ）**
-- プロンプトエンジニアリング基礎から上級まで
-- 段階的学習カリキュラム生成
-- 実践課題・プロジェクト提案
-- スキルレベル評価、進捗管理
-- 最新のプロンプト技術トレンド紹介
-
-**39. AI Full-Stack Prompt Engineer Roadmap Agent（フルスタックAIプロンプトエンジニア学習ロードマップ）**
+**37. AI Full-Stack Prompt Engineer Roadmap Agent（フルスタックAIプロンプトエンジニア学習ロードマップ）**
 - フロントエンド・バックエンド・AI統合の完全学習パス
 - LangChain、LlamaIndex等のフレームワーク習得
 - RAG、ファインチューニング、エージェント開発
 - 実践的なフルスタックプロジェクト設計
 - ポートフォリオ作成支援
 
-**40. AI Programming Language Tutor（プログラミング言語先生）**
-- 全プログラミング言語対応（Python, JavaScript, Go, Rust等）
-- 基礎文法から高度な設計パターンまで
-- 言語ごとのベストプラクティス指導
-- コード添削、リファクタリング提案
-- アルゴリズム・データ構造の解説
-
-**41. AI English Language Tutor（AI英語先生）**
+**38. AI English Language Tutor（AI英語先生）**
 - レベル別英語学習（初級〜上級）
 - 文法、語彙、リーディング、ライティング指導
 - ビジネス英語、技術英語特化コース
@@ -720,6 +806,18 @@
 ---
 
 **注**: これらは構想段階のアイデアです。実装優先度や仕様は今後検討します。
+
+---
+
+## 変更履歴
+
+### 2025-10-12
+- ✅ 3つの教育系エージェントを実装
+  - AI GitHub Tutorial Agent（817行）
+  - AI Prompt Engineering Roadmap Agent（1,562行）
+  - AI Programming Language Tutor（1,119行）
+- 進捗率: 54% → 65% (14 → 17エージェント)
+- カタログに詳細情報を追加
 
 ---
 
