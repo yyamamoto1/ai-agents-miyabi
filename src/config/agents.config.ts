@@ -489,6 +489,25 @@ export const AGENT_CONFIGS: Record<string, AgentConfig> = {
     maxRetries: 3,
     timeout: 90000,
   },
+
+  // AI経理担当者
+  BOOKKEEPER: {
+    name: 'AI Bookkeeper',
+    role: '経理業務の専門家',
+    category: 'business',
+    description: '日次経理業務の自動化、帳簿記帳、財務報告',
+    capabilities: [
+      '仕訳入力',
+      '帳簿記帳',
+      '請求書発行・管理',
+      '支払処理',
+      '経費精算処理',
+      '月次試算表作成',
+      '予実管理',
+    ],
+    maxRetries: 3,
+    timeout: 60000,
+  },
 };
 
 // カテゴリ別にエージェントを取得する関数
