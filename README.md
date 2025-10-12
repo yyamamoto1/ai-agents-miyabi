@@ -61,8 +61,8 @@ AI Agents Miyabiは、30以上の専門分野に特化したAIエージェント
 
 ```bash
 # リポジトリのクローン
-git clone https://github.com/yyamamoto1/ai-agents-miyabi.git
-cd ai-agents-miyabi
+git clone https://github.com/yyamamoto1/Ai-agents-miyabi.git
+cd Ai-agents-miyabi
 
 # 依存関係のインストール
 npm install
@@ -237,7 +237,7 @@ const results = await orchestrator.executeWorkflow('content-marketing-pipeline')
 ## 🏗️ アーキテクチャ
 
 ```
-ai-agents-miyabi/
+Ai-agents-miyabi/
 ├── src/
 │   ├── core/                    # コアシステム
 │   │   ├── BaseAgent.ts         # エージェント基底クラス
@@ -307,7 +307,7 @@ MIT License - 詳細は[LICENSE](LICENSE)ファイルを参照してください
 
 ## 📞 サポート
 
-- GitHub Issues: [https://github.com/yyamamoto1/ai-agents-miyabi/issues](https://github.com/yyamamoto1/ai-agents-miyabi/issues)
+- GitHub Issues: [https://github.com/yyamamoto1/Ai-agents-miyabi/issues](https://github.com/yyamamoto1/Ai-agents-miyabi/issues)
 - Documentation: プロジェクトWiki参照
 
 ---
