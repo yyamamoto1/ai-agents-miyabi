@@ -508,6 +508,83 @@ export const AGENT_CONFIGS: Record<string, AgentConfig> = {
     maxRetries: 3,
     timeout: 60000,
   },
+
+  // AIマーケティングディレクター
+  MARKETING_DIRECTOR: {
+    name: 'AI Marketing Director',
+    role: 'マーケティング戦略の統括責任者',
+    category: 'business',
+    description: '全マーケティングチャネルを統括し、統合マーケティング戦略を策定・実行',
+    capabilities: [
+      '統合マーケティング戦略策定',
+      'キャンペーン計画',
+      'チャネル最適化',
+      'ROI分析',
+      'チーム統括',
+      '予算配分',
+      'パフォーマンスダッシュボード',
+    ],
+    dependencies: ['AI_MARKETER', 'SEO_SPECIALIST', 'SNS_MARKETER_INSTAGRAM', 'SNS_MARKETER_TWITTER'],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AISEOスペシャリスト
+  SEO_SPECIALIST: {
+    name: 'AI SEO Specialist',
+    role: 'SEO最適化の専門家',
+    category: 'business',
+    description: 'オーガニックトラフィック増加のための包括的なSEO戦略を策定・実行',
+    capabilities: [
+      'キーワードリサーチ',
+      'オンページ最適化',
+      'テクニカルSEO',
+      'コンテンツ戦略',
+      '被リンク構築',
+      '競合分析',
+      'SEO監査',
+    ],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AISNSマーケター (Instagram)
+  SNS_MARKETER_INSTAGRAM: {
+    name: 'AI SNS Marketer (Instagram)',
+    role: 'Instagram専門のSNSマーケティングの専門家',
+    category: 'business',
+    description: 'Instagram投稿戦略、ビジュアルコンテンツ最適化、エンゲージメント向上を実行',
+    capabilities: [
+      'コンテンツ戦略立案',
+      '投稿コンテンツ作成',
+      'ハッシュタグリサーチ',
+      'ストーリーズ戦略',
+      'リール戦略',
+      'インフルエンサー連携',
+      'アナリティクス分析',
+    ],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AISNSマーケター (X/Twitter)
+  SNS_MARKETER_TWITTER: {
+    name: 'AI SNS Marketer (X/Twitter)',
+    role: 'X (旧Twitter)専門のSNSマーケティングの専門家',
+    category: 'business',
+    description: 'X投稿戦略、スレッド作成、リアルタイムエンゲージメント最適化を実行',
+    capabilities: [
+      'コンテンツ戦略立案',
+      'ツイート作成',
+      'スレッド作成',
+      'ハッシュタグリサーチ',
+      'エンゲージメント最適化',
+      'インフルエンサー連携',
+      'アナリティクス分析',
+    ],
+    maxRetries: 3,
+    timeout: 90000,
+  },
 };
 
 // カテゴリ別にエージェントを取得する関数
