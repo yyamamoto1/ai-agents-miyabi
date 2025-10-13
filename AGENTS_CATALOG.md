@@ -829,28 +829,13 @@
 ### 未実装エージェント一覧
 
 **開発・運用系:**
-- ✅ AI Test Engineer (QA Agent) - **Phase 1 実装完了** (789行)
-- ✅ AI DevOps Agent - **Phase 1 実装完了** (643行)
-- ✅ AI Project Manager - **Phase 1 実装完了** (683行)
 - 📝 AI Full-Stack Code Engineer
 - 📝 AI Full-Stack Programmer
 
-**ビジネス・戦略系:**
-- ✅ AI Sales Agent - **Phase 2 実装完了** (547行)
-- ✅ AI Customer Support Agent - **Phase 2 実装完了** (690行)
-- ✅ AI Financial Analyst - **Phase 1 実装完了** (742行)
-- ✅ AI Legal Advisor - **Phase 2 実装完了** (850行)
-
 **財務・会計・税務系:**
 - 📝 AI Certified Public Accountant (AI公認会計士)
-- ✅ AI Tax Accountant (AI税理士) - **Phase 2 実装完了** (920行)
-- ✅ AI Bookkeeper (AI経理担当者) - **Phase 1 実装完了** (700行)
 
 **マーケティング系:**
-- ✅ AI Marketing Director (全体指揮) - **Phase 2 実装完了** (1,423行)
-- ✅ AI SNS Marketer (Instagram特化) - **Phase 2 実装完了** (1,576行)
-- ✅ AI SNS Marketer (X/Twitter特化) - **Phase 2 実装完了** (1,521行)
-- ✅ AI SEO Specialist - **Phase 2 実装完了** (1,105行)
 - 📝 AI Email Marketer
 - 📝 AI Ad Operations Specialist
 - 📝 AI PR Specialist (広報)
@@ -881,7 +866,7 @@
 - 📝 AI Game Designer
 
 ### 今後の実装予定
-- 📝 未実装エージェント（計28エージェント）
+- 📝 未実装エージェント（計21エージェント）
 - 📝 実際のAI API統合 (OpenAI, Anthropic Claude等)
 - 📝 永続化・ログシステム
 - 📝 Webインターフェース
@@ -990,34 +975,16 @@
 - M&Aデューデリジェンス支援
 - 財務健全性分析、キャッシュフロー分析
 
-**38. AI Tax Accountant（AI税理士）**
-- 法人税・消費税・所得税の申告書作成
-- 税務計画・節税対策提案
-- 税制改正情報の追跡と影響分析
-- インボイス制度対応、電子帳簿保存法対応
-- 税務調査対応支援、質問応答書作成
-- 国際税務（移転価格、タックスヘイブン対策税制）
-- 相続税・贈与税シミュレーション
-
-**39. AI Bookkeeper（AI経理担当者）**
-- 日次経理業務自動化（仕訳入力、帳簿記帳）
-- 請求書発行・管理、支払処理
-- 経費精算処理、領収書データ化
-- 銀行口座・クレジットカード明細の自動取込
-- 売掛金・買掛金管理、入金消込
-- 月次試算表作成、予実管理レポート
-- 会計ソフト連携（freee、マネーフォワード等）
-
 ### 🎓 学習・教育特化系
 
-**37. AI Full-Stack Prompt Engineer Roadmap Agent（フルスタックAIプロンプトエンジニア学習ロードマップ）**
+**38. AI Full-Stack Prompt Engineer Roadmap Agent（フルスタックAIプロンプトエンジニア学習ロードマップ）**
 - フロントエンド・バックエンド・AI統合の完全学習パス
 - LangChain、LlamaIndex等のフレームワーク習得
 - RAG、ファインチューニング、エージェント開発
 - 実践的なフルスタックプロジェクト設計
 - ポートフォリオ作成支援
 
-**38. AI English Language Tutor（AI英語先生）**
+**39. AI English Language Tutor（AI英語先生）**
 - レベル別英語学習（初級〜上級）
 - 文法、語彙、リーディング、ライティング指導
 - ビジネス英語、技術英語特化コース
@@ -1030,7 +997,7 @@
 
 ---
 
-## 🎯 開発優先順位付けロードマップ（全37エージェント）
+## 🎯 開発優先順位付けロードマップ（全36エージェント）
 
 ### 🔴 Phase 1: 最優先（1-2ヶ月） - コアシステム完成 ✅ **完了**
 
@@ -1253,14 +1220,7 @@
 
 #### ビジネス・法務
 
-**#27. AI Legal Advisor** 📝 [未実装]
-- **優先度理由**: 契約書レビュー、コンプライアンス。リスク軽減
-- **ビジネス価値**: ★★★★☆ (4/5)
-- **実装難易度**: ★★★★★ (5/5) - 法的知識が複雑
-- **依存関係**: なし
-- **収益化インパクト**: 中 - 法務コスト削減
-
-**#28. AI Research Assistant** 📝 [未実装]
+**#27. AI Research Assistant** 📝 [未実装]
 - **優先度理由**: 学術研究、論文執筆。Research Analystとの差別化
 - **ビジネス価値**: ★★★☆☆ (3/5)
 - **実装難易度**: ★★★★☆ (4/5)
@@ -1269,7 +1229,7 @@
 
 #### デザイン拡張
 
-**#29. AI Creative Designer** 📝 [未実装]
+**#28. AI Creative Designer** 📝 [未実装]
 - **優先度理由**: クリエイティブデザイン全般。Design Directorサポート
 - **ビジネス価値**: ★★★☆☆ (3/5)
 - **実装難易度**: ★★★★☆ (4/5)
@@ -1278,21 +1238,21 @@
 
 #### 新規ビジネスモデル系
 
-**#30. AI eBook Publishing Agent (電子書籍出版)** 📝 [未実装]
+**#29. AI eBook Publishing Agent (電子書籍出版)** 📝 [未実装]
 - **優先度理由**: 電子書籍制作・出版の自動化
 - **ビジネス価値**: ★★★★☆ (4/5)
 - **実装難易度**: ★★★☆☆ (3/5)
 - **依存関係**: Writer、Designer連携
 - **収益化インパクト**: 中〜高 - 新規収益源
 
-**#31. AI Model Creation Agent (AIモデル作成)** 📝 [未実装]
+**#30. AI Model Creation Agent (AIモデル作成)** 📝 [未実装]
 - **優先度理由**: AIモデル設計・トレーニング自動化
 - **ビジネス価値**: ★★★★☆ (4/5)
 - **実装難易度**: ★★★★★ (5/5) - ML/DL専門知識必要
 - **依存関係**: Data Engineer、AI Engineer
 - **収益化インパクト**: 高 - 技術的差別化
 
-**#32. AI Side Business Model Agent (副業ビジネスモデル構築)** 📝 [未実装]
+**#31. AI Side Business Model Agent (副業ビジネスモデル構築)** 📝 [未実装]
 - **優先度理由**: 副業ビジネスモデル提案・構築支援
 - **ビジネス価値**: ★★★☆☆ (3/5)
 - **実装難易度**: ★★★☆☆ (3/5)
@@ -1305,35 +1265,35 @@
 
 #### 規制対応が必要な専門分野
 
-**#33. AI Medical Diagnosis Assistant** 📝 [未実装]
+**#32. AI Medical Diagnosis Assistant** 📝 [未実装]
 - **優先度理由**: 医療診断支援。規制対応と法的責任が重大
 - **ビジネス価値**: ★★★★★ (5/5) - ポテンシャル高いが実装リスクも高い
 - **実装難易度**: ★★★★★ (5/5) - 医療規制、法的責任
 - **依存関係**: なし（独立専門分野）
 - **収益化インパクト**: 非常に高（但しリスクも高）
 
-**#34. AI Architect Designer** 📝 [未実装]
+**#33. AI Architect Designer** 📝 [未実装]
 - **優先度理由**: 建築デザイン。構造計算・法規対応
 - **ビジネス価値**: ★★☆☆☆ (2/5) - ニッチ
 - **実装難易度**: ★★★★★ (5/5) - 構造計算、建築基準法
 - **依存関係**: Designer
 - **収益化インパクト**: 低 - 非常にニッチ
 
-**#35. AI Specialized Translator** 📝 [未実装]
+**#34. AI Specialized Translator** 📝 [未実装]
 - **優先度理由**: 専門分野翻訳。Writerで対応可能
 - **ビジネス価値**: ★★☆☆☆ (2/5)
 - **実装難易度**: ★★★★☆ (4/5)
 - **依存関係**: Writer
 - **収益化インパクト**: 低 - Writerで代替可能
 
-**#36. AI Game Designer** 📝 [未実装]
+**#35. AI Game Designer** 📝 [未実装]
 - **優先度理由**: ゲーム開発支援。ニッチだが専門性高い
 - **ビジネス価値**: ★★☆☆☆ (2/5)
 - **実装難易度**: ★★★★☆ (4/5)
 - **依存関係**: なし
 - **収益化インパクト**: 低 - ニッチ市場
 
-**#37. AI Data Engineer** 📝 [未実装]
+**#36. AI Data Engineer** 📝 [未実装]
 - **優先度理由**: データパイプライン構築。Data Analyst基盤強化
 - **ビジネス価値**: ★★★☆☆ (3/5)
 - **実装難易度**: ★★★★☆ (4/5)
@@ -1441,20 +1401,19 @@
 ### ⚪ Phase 4: 低優先度（5-8ヶ月） - 専門分野・新規ビジネス
 **目標**: 専門分野拡張と新規ビジネスモデル開拓
 **期間**: 5-8ヶ月
-**エージェント数**: 8
+**エージェント数**: 7
 
 25. AI Full-Stack Code Engineer
 26. AI Full-Stack Programmer
-27. AI Legal Advisor
-28. AI Research Assistant
-29. AI Creative Designer
-30. AI eBook Publishing Agent
-31. AI Model Creation Agent
-32. AI Side Business Model Agent
+27. AI Research Assistant
+28. AI Creative Designer
+29. AI eBook Publishing Agent
+30. AI Model Creation Agent
+31. AI Side Business Model Agent
 
 **成果物**:
 - ✅ 開発能力拡張
-- ✅ 法務・研究支援
+- ✅ 研究支援
 - ✅ 新規収益源開拓
 
 **ビジネスインパクト**: 新規事業展開・技術的差別化
@@ -1466,11 +1425,11 @@
 **期間**: 8ヶ月以降
 **エージェント数**: 5
 
-33. AI Medical Diagnosis Assistant
-34. AI Architect Designer
-35. AI Specialized Translator
-36. AI Game Designer
-37. AI Data Engineer
+32. AI Medical Diagnosis Assistant
+33. AI Architect Designer
+34. AI Specialized Translator
+35. AI Game Designer
+36. AI Data Engineer
 
 **成果物**:
 - ✅ 規制産業対応（医療等）
@@ -1669,7 +1628,7 @@
 - ✅ 未実装: 37 → 32エージェント
 
 ### 2025-10-13 (v2.0) - 大幅拡張・優先順位再構築
-- ✅ **未実装エージェントリストを大幅拡張**（9 → 37エージェント）
+- ✅ **未実装エージェントリストを大幅拡張**
   - マーケティング系: 7エージェント追加（Marketing Director、SNS Marketer、SEO等）
   - クリエイティブ系: 9エージェント追加（Design Director、Video/Music Creator等）
   - コンテンツ・出版系: 3エージェント追加（電子書籍出版、AIモデル作成、副業支援）
@@ -1677,12 +1636,12 @@
   - 財務系: 3エージェント追加（公認会計士、税理士、経理担当者）
 
 - ✅ **開発優先順位付けロードマップを全面刷新**
-  - 全37エージェントを5つのPhaseに再分類（Phase 1-5）
+  - 全エージェントを5つのPhaseに再分類（Phase 1-5）
   - 各エージェントに「収益化インパクト」指標を追加
   - Phase 1: コアシステム完成（5エージェント、1-2ヶ月）
   - Phase 2: ビジネス収益化加速（8エージェント、2-3ヶ月）
   - Phase 3: クリエイティブ強化（11エージェント、3-5ヶ月）
-  - Phase 4: 専門分野拡張（8エージェント、5-8ヶ月）
+  - Phase 4: 専門分野拡張（7エージェント、5-8ヶ月）
   - Phase 5: 規制産業対応（5エージェント、8ヶ月以降）
 
 - ✅ **実装戦略を大幅強化**
@@ -1693,7 +1652,6 @@
 
 - ✅ **進捗率を更新**
   - 進捗率: 65% → 31% (17/54エージェント実装完了)
-  - 未実装エージェント: 37エージェント
 
 ### 2025-10-13 (v1.1) - 財務系エージェント追加
 - ✅ 財務・会計・税務系エージェント3つを将来追加予定リストに追加
