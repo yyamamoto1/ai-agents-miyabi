@@ -585,6 +585,44 @@ export const AGENT_CONFIGS: Record<string, AgentConfig> = {
     maxRetries: 3,
     timeout: 90000,
   },
+
+  // AIランディングページデザイナー
+  LANDING_PAGE_DESIGNER: {
+    name: 'AI Landing Page Designer',
+    role: 'ランディングページ設計・最適化の専門家',
+    category: 'creative',
+    description: '高コンバージョン率のLPを設計し、A/Bテスト、ヒートマップ分析、UX改善を実行',
+    capabilities: [
+      'LP設計',
+      'コンバージョン最適化',
+      'A/Bテスト設計',
+      'ヒートマップ分析',
+      'コピーライティング',
+      'CTA最適化',
+      'モバイル最適化',
+    ],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AIEmailマーケター
+  EMAIL_MARKETER: {
+    name: 'AI Email Marketer',
+    role: 'Emailマーケティングの専門家',
+    category: 'creative',
+    description: 'セグメンテーション、パーソナライゼーション、A/Bテスト、自動化シーケンスでROI最大化',
+    capabilities: [
+      'Emailキャンペーン作成',
+      'セグメンテーション',
+      'パーソナライゼーション',
+      'A/Bテスト',
+      '自動化シーケンス',
+      'リスト成長',
+      'パフォーマンス分析',
+    ],
+    maxRetries: 3,
+    timeout: 90000,
+  },
 };
 
 // カテゴリ別にエージェントを取得する関数
