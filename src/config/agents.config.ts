@@ -623,6 +623,26 @@ export const AGENT_CONFIGS: Record<string, AgentConfig> = {
     maxRetries: 3,
     timeout: 90000,
   },
+
+  // AIデザインディレクター
+  DESIGN_DIRECTOR: {
+    name: 'AI Design Director',
+    role: 'デザイン戦略の統括責任者',
+    category: 'creative',
+    description: '全デザインエージェントを統括し、統合デザイン戦略を策定・実行',
+    capabilities: [
+      'デザイン戦略策定',
+      'ブランドガイドライン作成',
+      'デザインシステム構築',
+      'チーム統括',
+      'プロジェクト管理',
+      '品質レビュー',
+      'パフォーマンスダッシュボード',
+    ],
+    dependencies: ['AI_DESIGNER', 'LANDING_PAGE_DESIGNER', 'AI_ILLUSTRATOR'],
+    maxRetries: 3,
+    timeout: 90000,
+  },
 };
 
 // カテゴリ別にエージェントを取得する関数
