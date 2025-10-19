@@ -643,6 +643,163 @@ export const AGENT_CONFIGS: Record<string, AgentConfig> = {
     maxRetries: 3,
     timeout: 90000,
   },
+
+  // AIコンテンツクリエイターディレクター
+  CONTENT_CREATOR_DIRECTOR: {
+    name: 'AI Content Creator Director',
+    role: 'コンテンツクリエイション戦略の統括責任者',
+    category: 'creative',
+    description: '全コンテンツクリエイター（Writer、Video Creator、SNS Content Creator等）を統括し、統合コンテンツ戦略を策定・実行',
+    capabilities: [
+      '統合コンテンツ戦略策定',
+      '編集カレンダー作成',
+      'クリエイターチーム統括',
+      'コンテンツ品質レビュー',
+      'パフォーマンスダッシュボード',
+      'ブランドボイス管理',
+      'コンテンツ配信戦略',
+    ],
+    dependencies: ['AI_WRITER', 'CONTENT_CREATOR', 'SNS_MARKETER_INSTAGRAM', 'SNS_MARKETER_TWITTER'],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AIウェブサイトデザイナー
+  WEBSITE_DESIGNER: {
+    name: 'AI Website Designer',
+    role: 'Webサイトデザインの専門家',
+    category: 'creative',
+    description: 'Webサイト全体の設計、UX最適化、レスポンシブデザイン、アクセシビリティ対応を実行',
+    capabilities: [
+      'Webサイト設計',
+      'UX最適化',
+      'レスポンシブデザイン',
+      'アクセシビリティ改善',
+      'SEO最適化デザイン',
+      'パフォーマンス最適化',
+      'サイト構造設計',
+    ],
+    maxRetries: 3,
+    timeout: 120000,
+  },
+
+  // AISNSコンテンツクリエイター (Instagram)
+  SNS_CONTENT_CREATOR_INSTAGRAM: {
+    name: 'AI SNS Content Creator (Instagram)',
+    role: 'Instagram専門コンテンツクリエイターの専門家',
+    category: 'creative',
+    description: 'Instagram投稿コンテンツ、ストーリーズ、リールの制作を実行',
+    capabilities: [
+      '投稿コンテンツ作成',
+      'ストーリーズ作成',
+      'リール作成',
+      'キャプションライティング',
+      'ハッシュタグ戦略',
+      'カルーセルデザイン',
+      'アナリティクス分析',
+    ],
+    dependencies: ['SNS_MARKETER_INSTAGRAM'],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AISNSコンテンツクリエイター (X/Twitter)
+  SNS_CONTENT_CREATOR_TWITTER: {
+    name: 'AI SNS Content Creator (X/Twitter)',
+    role: 'X (旧Twitter)専門コンテンツクリエイターの専門家',
+    category: 'creative',
+    description: 'Xツイート、スレッド、エンゲージメントコンテンツの制作を実行',
+    capabilities: [
+      'ツイート作成',
+      'スレッド作成',
+      'エンゲージメント戦略',
+      'トレンド分析',
+      'リプライ戦略',
+      'ハッシュタグリサーチ',
+      'アナリティクス分析',
+    ],
+    dependencies: ['SNS_MARKETER_TWITTER'],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AIビデオクリエイター
+  VIDEO_CREATOR: {
+    name: 'AI Video Creator',
+    role: '動画コンテンツ制作の専門家',
+    category: 'creative',
+    description: 'YouTube、TikTok、Instagram Reels等の動画コンテンツ制作を実行',
+    capabilities: [
+      '動画スクリプト作成',
+      '絵コンテ生成',
+      '動画編集',
+      'YouTube最適化',
+      'ショート動画作成',
+      '動画アナリティクス',
+      'サムネイルデザイン',
+    ],
+    maxRetries: 3,
+    timeout: 180000,
+  },
+
+  // AIミュージッククリエイター
+  MUSIC_CREATOR: {
+    name: 'AI Music Creator',
+    role: '音楽・BGM制作の専門家',
+    category: 'creative',
+    description: 'BGM、効果音、ジングル等の音楽コンテンツ制作を実行',
+    capabilities: [
+      '音楽作曲',
+      'BGM作成',
+      '効果音生成',
+      'オーディオミキシング',
+      'ムードマッチング',
+      'ジャンル作成',
+      'オーディオ分析',
+    ],
+    maxRetries: 3,
+    timeout: 120000,
+  },
+
+  // AI広告運用スペシャリスト
+  AD_OPERATIONS_SPECIALIST: {
+    name: 'AI Ad Operations Specialist',
+    role: '広告運用の専門家',
+    category: 'business',
+    description: 'Google Ads、Meta Ads、LINE Ads等の広告運用を実行',
+    capabilities: [
+      'キャンペーン設定',
+      '入札最適化',
+      '広告クリエイティブテスト',
+      '予算配分',
+      'パフォーマンス分析',
+      'ROI追跡',
+      'オーディエンスターゲティング',
+    ],
+    dependencies: ['MARKETING_DIRECTOR'],
+    maxRetries: 3,
+    timeout: 90000,
+  },
+
+  // AI広報スペシャリスト
+  PR_SPECIALIST: {
+    name: 'AI PR Specialist',
+    role: '広報・PR活動の専門家',
+    category: 'business',
+    description: 'プレスリリース、メディア対応、危機管理、ブランドストーリーテリングを実行',
+    capabilities: [
+      'プレスリリース作成',
+      'メディアアウトリーチ',
+      '危機管理',
+      'ブランドストーリーテリング',
+      'インフルエンサーリレーション',
+      'PR戦略策定',
+      'メディアモニタリング',
+    ],
+    dependencies: ['MARKETING_DIRECTOR'],
+    maxRetries: 3,
+    timeout: 90000,
+  },
 };
 
 // カテゴリ別にエージェントを取得する関数
