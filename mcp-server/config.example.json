@@ -1,0 +1,56 @@
+{
+  "name": "ai-agents-miyabi-server",
+  "version": "1.0.0",
+  "description": "MCP Server for ai-agents-miyabi multi-agent system",
+  "capabilities": {
+    "tools": {
+      "execute_agent_task": {
+        "description": "Execute task using ai-agents-miyabi multi-agent system",
+        "maxAgents": 5,
+        "defaultTimeout": 300,
+        "supportedCategories": [
+          "データ・分析系",
+          "クリエイティブ・コンテンツ生成系", 
+          "開発・運用・管理系",
+          "ビジネス・戦略・顧客対応系",
+          "教育・研究系",
+          "専門分野特化型"
+        ]
+      }
+    },
+    "tmux": {
+      "enabled": true,
+      "maxSessions": 10,
+      "maxPanesPerSession": 12,
+      "sessionPrefix": "ai-agents",
+      "defaultLayout": "tiled"
+    },
+    "security": {
+      "logSanitization": true,
+      "excludePersonalInfo": true,
+      "maxLogRetentionDays": 7
+    }
+  },
+  "logging": {
+    "level": "info",
+    "outputDir": "./logs",
+    "maxFileSize": "10MB",
+    "maxFiles": 5,
+    "sanitize": {
+      "enabled": true,
+      "patterns": [
+        "password",
+        "token", 
+        "key",
+        "secret",
+        "credential"
+      ]
+    }
+  },
+  "storage": {
+    "outputDir": "./outputs",
+    "dataDir": "./data",
+    "retentionDays": 30,
+    "compression": true
+  }
+}

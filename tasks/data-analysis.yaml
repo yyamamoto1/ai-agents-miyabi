@@ -1,0 +1,19 @@
+task: "ECサイトの売上データを分析して、来月の売上予測レポートを作成してください"
+priority: medium
+timeout: 600
+agents:
+  - ai-data-analyst
+  - ai-business-intelligence-agent
+  - ai-visualization-specialist
+context:
+  data_source: "./data/sales_data.csv"
+  time_period: "2024年1月-10月"
+  target_metrics:
+    - 月間売上推移
+    - 商品カテゴリ別売上
+    - 顧客セグメント分析
+    - 季節性トレンド
+output_format:
+  - "PDF レポート"
+  - "インタラクティブダッシュボード"
+  - "予測モデル精度評価"

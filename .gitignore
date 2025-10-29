@@ -145,6 +145,7 @@ package-lock.json
 
 # Build output
 dist/
+build/
 *.tsbuildinfo
 
 # Environment variables
@@ -167,3 +168,39 @@ coverage/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# MCP Server セキュリティ除外
+# 実行結果・ログ・機密データ
+logs/
+outputs/
+data/
+sessions/
+*.session
+*.tmux
+
+# 認証・設定ファイル
+.auth
+.credentials
+.tokens
+config.local.json
+config.prod.json
+*-secrets.json
+*-credentials.json
+
+# 一時ファイル・実行環境
+tmp/
+temp/
+.tmp/
+.cache/
+pid
+*.pid
+*.sock
+
+# ユーザー固有の設定
+*-user.json
+*-local.json
+user-config.json
+
+# 本番環境設定
+production.json
+staging.json

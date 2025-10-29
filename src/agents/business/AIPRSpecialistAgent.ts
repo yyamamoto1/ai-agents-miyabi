@@ -370,7 +370,7 @@ export class AIPRSpecialistAgent extends BaseAgent {
               journalist: {
                 name: '田中太郎',
                 role: 'テクノロジー担当記者',
-                email: 'tanaka@nikkei.com',
+                email: 'example@example.com',
                 relationship: 'medium',
                 notes: '過去にAI関連記事執筆、データ重視',
               },
@@ -2252,7 +2252,7 @@ Email: pr@sample.com / Tel: 03-1234-5678
         contact: {
           name: '田中太郎',
           role: 'テクノロジー担当記者',
-          email: 'tanaka@nikkei.com',
+          email: 'example@example.com',
           relationship: 'medium',
         },
       },

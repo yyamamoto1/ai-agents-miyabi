@@ -8,7 +8,11 @@
     "build": "tsc",
     "test": "vitest",
     "lint": "eslint . --ext .ts,.tsx",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "mcp-server": "tsx mcp-server/server.ts",
+    "mcp-dev": "tsx --watch mcp-server/server.ts",
+    "security-check": "./scripts/security-check.sh",
+    "pre-commit": "npm run security-check && npm run lint && npm run typecheck"
   },
   "keywords": [
     "agentic-os",
@@ -16,9 +20,13 @@
   ],
   "author": "",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "yaml": "^2.3.4"
+  },
   "devDependencies": {
     "@types/node": "^20.10.0",
+    "@types/yaml": "^1.9.0",
     "tsx": "^4.7.0",
     "typescript": "^5.8.3",
     "vitest": "^3.2.4",

@@ -1,0 +1,18 @@
+{
+  "task": "React+TypeScriptでTodoアプリケーションを開発してください",
+  "priority": "high",
+  "timeout": 900,
+  "requirements": [
+    "Modern React with hooks",
+    "TypeScript strict mode",
+    "Responsive design",
+    "Local storage persistence",
+    "Unit tests included"
+  ],
+  "deliverables": [
+    "Complete source code",
+    "Documentation",
+    "Test coverage report",
+    "Deployment instructions"
+  ]
+}

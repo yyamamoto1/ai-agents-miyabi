@@ -1,0 +1,131 @@
+{
+  "name": "ai-agents-miyabi-server",
+  "version": "1.0.0",
+  "description": "MCP Server for ai-agents-miyabi multi-agent system",
+  "capabilities": {
+    "tools": {
+      "execute_agent_task": {
+        "description": "Execute task using ai-agents-miyabi multi-agent system",
+        "maxAgents": 5,
+        "defaultTimeout": 300,
+        "supportedCategories": [
+          "データ・分析系",
+          "クリエイティブ・コンテンツ生成系", 
+          "開発・運用・管理系",
+          "ビジネス・戦略・顧客対応系",
+          "教育・研究系",
+          "専門分野特化型"
+        ]
+      },
+      "list_available_agents": {
+        "description": "List all 54 available agents in the catalog",
+        "totalAgents": 54
+      },
+      "get_agent_status": {
+        "description": "Get current status of running agents"
+      },
+      "terminate_agents": {
+        "description": "Terminate all running agents and cleanup tmux sessions"
+      }
+    },
+    "tmux": {
+      "enabled": true,
+      "maxSessions": 10,
+      "maxPanesPerSession": 12,
+      "sessionPrefix": "ai-agents",
+      "defaultLayout": "tiled"
+    },
+    "miyabi": {
+      "integration": true,
+      "autoAgentSelection": true,
+      "parallelExecution": true
+    }
+  },
+  "defaultSettings": {
+    "agentSelection": {
+      "strategy": "auto",
+      "maxAgents": 3,
+      "prioritizeSpecialized": true
+    },
+    "execution": {
+      "timeout": 300,
+      "retries": 2,
+      "parallelProcessing": true
+    },
+    "tmux": {
+      "autoCleanup": true,
+      "preserveLogs": true,
+      "sessionTimeout": 3600
+    }
+  },
+  "agentCategories": {
+    "データ・分析系": [
+      "ai-data-analyst",
+      "ai-business-intelligence-agent", 
+      "ai-market-research-analyst",
+      "ai-predictive-analytics-agent",
+      "ai-trend-forecaster",
+      "ai-data-scientist",
+      "ai-statistical-analyst",
+      "ai-visualization-specialist",
+      "ai-etl-engineer"
+    ],
+    "クリエイティブ・コンテンツ生成系": [
+      "ai-content-creator",
+      "ai-copywriter",
+      "ai-social-media-manager",
+      "ai-ui-ux-designer",
+      "ai-graphic-designer",
+      "ai-brand-strategist",
+      "ai-video-creator",
+      "ai-podcast-producer",
+      "ai-creative-director"
+    ],
+    "開発・運用・管理系": [
+      "ai-software-developer",
+      "ai-devops-engineer", 
+      "ai-code-reviewer",
+      "ai-qa-tester",
+      "ai-security-analyst",
+      "ai-performance-optimizer",
+      "ai-system-architect",
+      "ai-database-admin",
+      "ai-cloud-engineer",
+      "ai-automation-specialist"
+    ],
+    "ビジネス・戦略・顧客対応系": [
+      "ai-business-strategist",
+      "ai-consultant",
+      "ai-project-manager",
+      "ai-customer-service-agent",
+      "ai-sales-representative",
+      "ai-support-specialist",
+      "ai-marketing-specialist",
+      "ai-product-manager",
+      "ai-operations-manager"
+    ],
+    "教育・研究系": [
+      "ai-educator",
+      "ai-training-specialist",
+      "ai-curriculum-designer",
+      "ai-research-analyst",
+      "ai-academic-writer",
+      "ai-language-tutor",
+      "ai-assessment-creator",
+      "ai-learning-designer"
+    ],
+    "専門分野特化型": [
+      "ai-legal-advisor",
+      "ai-compliance-officer", 
+      "ai-contract-analyst",
+      "ai-medical-advisor",
+      "ai-health-analyst",
+      "ai-clinical-researcher",
+      "ai-financial-analyst",
+      "ai-investment-advisor",
+      "ai-risk-manager",
+      "ai-hr-specialist",
+      "ai-recruitment-specialist"
+    ]
+  }
+}
