@@ -3,6 +3,29 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
+/**
+ * シェルコマンド用の安全なエスケープ関数
+ * コマンドインジェクション攻撃を防ぐ
+ */
+function escapeShellArg(arg: string): string {
+  return `'${arg.replace(/'/g, "'\\''")}'`;
+}
+
+/**
+ * tmuxセッション名/ウィンドウ名として安全な文字列に変換
+ * 英数字、ハイフン、アンダースコアのみ許可
+ */
+function sanitizeTmuxName(name: string): string {
+  return name.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 50);
+}
+
+/**
+ * セッションIDのバリデーション
+ */
+function isValidSessionId(sessionId: string): boolean {
+  return /^[a-zA-Z0-9_-]+$/.test(sessionId) && sessionId.length <= 100;
+}
+
 export interface TmuxSession {
   id: string;
   name: string;
@@ -34,12 +57,13 @@ export class TmuxManager {
    */
   async createAgentSession(agentIds: string[]): Promise<string> {
     const sessionId = `ai-agents-${Date.now()}`;
-    const sessionName = `ai-agents-miyabi-${sessionId}`;
+    // セッション名をサニタイズ
+    const sessionName = sanitizeTmuxName(`ai-agents-miyabi-${sessionId}`);
 
     try {
-      // メインセッション作成
-      await execAsync(`tmux new-session -d -s ${sessionName} -x 120 -y 30`);
-      
+      // メインセッション作成（エスケープ処理）
+      await execAsync(`tmux new-session -d -s ${escapeShellArg(sessionName)} -x 120 -y 30`);
+
       // セッション情報記録
       const session: TmuxSession = {
         id: sessionId,
@@ -50,7 +74,7 @@ export class TmuxManager {
 
       // 各エージェント用のウィンドウ作成準備
       console.log(`Created tmux session: ${sessionName} for ${agentIds.length} agents`);
-      
+
       this.activeSessions.set(sessionId, session);
       return sessionId;
     } catch (error) {
@@ -68,7 +92,8 @@ export class TmuxManager {
     }
 
     try {
-      const sessionName = session.name;
+      // セッション名は既にサニタイズ済み（createAgentSessionで処理）
+      const sessionName = escapeShellArg(session.name);
 
       // エージェント数に応じてペイン配置を決定
       if (agentCount <= 2) {
@@ -77,23 +102,24 @@ export class TmuxManager {
       } else if (agentCount <= 4) {
         // 4分割 (2x2グリッド)
         await execAsync(`tmux split-window -t ${sessionName} -h`);
-        await execAsync(`tmux split-window -t ${sessionName}:0.0 -v`);
-        await execAsync(`tmux split-window -t ${sessionName}:0.2 -v`);
+        await execAsync(`tmux split-window -t ${escapeShellArg(session.name + ':0.0')} -v`);
+        await execAsync(`tmux split-window -t ${escapeShellArg(session.name + ':0.2')} -v`);
       } else if (agentCount <= 6) {
         // 6分割 (2x3グリッド)
         await execAsync(`tmux split-window -t ${sessionName} -h`);
-        await execAsync(`tmux split-window -t ${sessionName}:0.0 -v`);
-        await execAsync(`tmux split-window -t ${sessionName}:0.1 -v`);
-        await execAsync(`tmux split-window -t ${sessionName}:0.3 -v`);
-        await execAsync(`tmux split-window -t ${sessionName}:0.4 -v`);
+        await execAsync(`tmux split-window -t ${escapeShellArg(session.name + ':0.0')} -v`);
+        await execAsync(`tmux split-window -t ${escapeShellArg(session.name + ':0.1')} -v`);
+        await execAsync(`tmux split-window -t ${escapeShellArg(session.name + ':0.3')} -v`);
+        await execAsync(`tmux split-window -t ${escapeShellArg(session.name + ':0.4')} -v`);
       } else {
         // 多数のエージェント用: ウィンドウ分割方式
         for (let i = 1; i < Math.min(agentCount, 10); i++) {
-          await execAsync(`tmux new-window -t ${sessionName} -n agent-${i}`);
+          const windowName = sanitizeTmuxName(`agent-${i}`);
+          await execAsync(`tmux new-window -t ${sessionName} -n ${escapeShellArg(windowName)}`);
         }
       }
 
-      console.log(`Setup multi-pane environment for ${agentCount} agents in session ${sessionName}`);
+      console.log(`Setup multi-pane environment for ${agentCount} agents in session ${session.name}`);
     } catch (error) {
       throw new Error(`Failed to setup multi-pane environment: ${error}`);
     }
@@ -109,9 +135,8 @@ export class TmuxManager {
     }
 
     try {
-      const sessionName = session.name;
       const { stdout } = await execAsync(
-        `tmux list-panes -t ${sessionName} -F '#{pane_id}:#{pane_current_command}'`
+        `tmux list-panes -t ${escapeShellArg(session.name)} -F '#{pane_id}:#{pane_current_command}'`
       );
 
       return stdout
@@ -142,21 +167,30 @@ export class TmuxManager {
       throw new Error(`Session ${sessionId} not found`);
     }
 
+    // agentIdとpaneIdのバリデーション
+    if (!isValidSessionId(agentId)) {
+      throw new Error(`Invalid agent ID: ${agentId}`);
+    }
+    if (!/^[0-9]+$/.test(paneId)) {
+      throw new Error(`Invalid pane ID: ${paneId}`);
+    }
+
     try {
-      const sessionName = session.name;
-      
+      const safeAgentId = sanitizeTmuxName(agentId);
+      const targetPane = `${session.name}:%${paneId}`;
+
       // ペインタイトル設定
       await execAsync(
-        `tmux select-pane -t ${sessionName}:%${paneId} -T "${agentId}"`
+        `tmux select-pane -t ${escapeShellArg(targetPane)} -T ${escapeShellArg(safeAgentId)}`
       );
 
-      // 作業ディレクトリ設定
-      const agentPath = `./src/agents/${agentId}`;
+      // 作業ディレクトリ設定（パスインジェクション防止）
+      const agentPath = `./src/agents/${safeAgentId}`;
       await execAsync(
-        `tmux send-keys -t ${sessionName}:%${paneId} 'cd ${agentPath}' C-m`
+        `tmux send-keys -t ${escapeShellArg(targetPane)} ${escapeShellArg('cd ' + agentPath)} C-m`
       );
 
-      console.log(`Assigned agent ${agentId} to pane %${paneId} in session ${sessionName}`);
+      console.log(`Assigned agent ${safeAgentId} to pane %${paneId} in session ${session.name}`);
     } catch (error) {
       throw new Error(`Failed to assign agent to pane: ${error}`);
     }
@@ -175,16 +209,16 @@ export class TmuxManager {
     }
 
     try {
-      const sessionName = session.name;
+      const escapedSessionName = escapeShellArg(session.name);
 
       // セッション情報取得
       const { stdout: sessionInfo } = await execAsync(
-        `tmux display-message -t ${sessionName} -p '#{session_name}:#{session_windows}:#{session_created}'`
+        `tmux display-message -t ${escapedSessionName} -p '#{session_name}:#{session_windows}:#{session_created}'`
       );
 
       // 各ペインの状態取得
       const { stdout: paneInfo } = await execAsync(
-        `tmux list-panes -t ${sessionName} -F '#{pane_id}:#{pane_title}:#{pane_current_command}:#{pane_active}'`
+        `tmux list-panes -t ${escapedSessionName} -F '#{pane_id}:#{pane_title}:#{pane_current_command}:#{pane_active}'`
       );
 
       const paneStates = paneInfo
@@ -202,7 +236,7 @@ export class TmuxManager {
 
       return {
         sessionInfo: {
-          name: sessionName,
+          name: session.name,
           info: sessionInfo.trim(),
         },
         paneStates,
@@ -251,11 +285,11 @@ export class TmuxManager {
 
     for (const [sessionId, session] of this.activeSessions.entries()) {
       try {
-        // セッション終了
-        await execAsync(`tmux kill-session -t ${session.name}`);
+        // セッション終了（エスケープ処理）
+        await execAsync(`tmux kill-session -t ${escapeShellArg(session.name)}`);
         cleanedSessions.push(session.name);
         this.activeSessions.delete(sessionId);
-        
+
         console.log(`Cleaned up session: ${session.name}`);
       } catch (error) {
         const errorMsg = `Failed to cleanup session ${session.name}: ${error}`;
@@ -277,7 +311,7 @@ export class TmuxManager {
     }
 
     try {
-      await execAsync(`tmux kill-session -t ${session.name}`);
+      await execAsync(`tmux kill-session -t ${escapeShellArg(session.name)}`);
       this.activeSessions.delete(sessionId);
       console.log(`Terminated session: ${session.name}`);
     } catch (error) {

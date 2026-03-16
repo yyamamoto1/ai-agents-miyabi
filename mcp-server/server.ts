@@ -13,8 +13,15 @@ import { AgentOrchestrator } from './agent-orchestrator.js';
 import { TmuxManager } from './tmux-manager.js';
 import { TaskMapper } from './task-mapper.js';
 import { Logger } from './logger.js';
-import { readFile } from 'fs/promises';
+import { SecurityManager } from './security.js';
+import { readFile, stat } from 'fs/promises';
 import { parse as parseYaml } from 'yaml';
+import path from 'path';
+
+// 許可されたタスクファイルディレクトリ
+const ALLOWED_TASK_DIRS = ['tasks', 'examples'];
+// 最大ファイルサイズ（1MB）
+const MAX_FILE_SIZE = 1024 * 1024;
 
 /**
  * ai-agents-miyabi MCP Server
@@ -26,6 +33,7 @@ class AiAgentsMiyabiMCPServer {
   private tmuxManager: TmuxManager;
   private taskMapper: TaskMapper;
   private logger: Logger;
+  private securityManager: SecurityManager;
 
   constructor() {
     this.server = new Server(
@@ -44,6 +52,7 @@ class AiAgentsMiyabiMCPServer {
     this.tmuxManager = new TmuxManager();
     this.taskMapper = new TaskMapper();
     this.logger = new Logger();
+    this.securityManager = new SecurityManager();
 
     this.setupHandlers();
   }
@@ -358,14 +367,74 @@ class AiAgentsMiyabiMCPServer {
   }
 
   /**
+   * ファイルパスの検証（パストラバーサル攻撃防止）
+   */
+  private validateFilePath(filePath: string): { isValid: boolean; error?: string; normalizedPath?: string } {
+    // パスの正規化
+    const normalizedPath = path.normalize(filePath);
+    const resolvedPath = path.resolve(process.cwd(), normalizedPath);
+    const cwd = process.cwd();
+
+    // 許可されたディレクトリ内かチェック
+    const isInAllowedDir = ALLOWED_TASK_DIRS.some(dir => {
+      const allowedPath = path.resolve(cwd, dir);
+      return resolvedPath.startsWith(allowedPath + path.sep) || resolvedPath === allowedPath;
+    });
+
+    if (!isInAllowedDir) {
+      return {
+        isValid: false,
+        error: `File path must be within allowed directories: ${ALLOWED_TASK_DIRS.join(', ')}`
+      };
+    }
+
+    // パストラバーサル攻撃の検出
+    if (normalizedPath.includes('..')) {
+      return {
+        isValid: false,
+        error: 'Path traversal detected: ".." not allowed in file path'
+      };
+    }
+
+    // 許可されたファイル拡張子のチェック
+    const allowedExtensions = ['.json', '.yaml', '.yml', '.txt', '.md'];
+    const ext = path.extname(normalizedPath).toLowerCase();
+    if (!allowedExtensions.includes(ext)) {
+      return {
+        isValid: false,
+        error: `File extension not allowed. Allowed: ${allowedExtensions.join(', ')}`
+      };
+    }
+
+    return { isValid: true, normalizedPath: resolvedPath };
+  }
+
+  /**
    * ファイルからタスク実行
    */
   private async executeTaskFromFile(args: any) {
     const { filePath, format = 'json' } = args;
 
     try {
+      // パスの検証（パストラバーサル攻撃防止）
+      const validation = this.validateFilePath(filePath);
+      if (!validation.isValid) {
+        throw new McpError(ErrorCode.InvalidRequest, validation.error || 'Invalid file path');
+      }
+
+      const safePath = validation.normalizedPath!;
+
+      // ファイルサイズのチェック
+      const fileStat = await stat(safePath);
+      if (fileStat.size > MAX_FILE_SIZE) {
+        throw new McpError(
+          ErrorCode.InvalidRequest,
+          `File size exceeds maximum allowed size (${MAX_FILE_SIZE} bytes)`
+        );
+      }
+
       // ファイル読み込み
-      const fileContent = await readFile(filePath, 'utf-8');
+      const fileContent = await readFile(safePath, 'utf-8');
       let taskData: any;
 
       // フォーマット別解析
@@ -384,8 +453,14 @@ class AiAgentsMiyabiMCPServer {
           throw new Error(`Unsupported format: ${format}`);
       }
 
+      // タスクデータのサニタイズ
+      const sanitizedTaskData = this.securityManager.sanitizeTaskContent(taskData);
+
       // タスク実行
-      const result = await this.executeAgentTask(taskData);
+      const result = await this.executeAgentTask(sanitizedTaskData);
+
+      // ファイルパスを正規化して返す（元のパスは漏らさない）
+      const safeSourcePath = this.securityManager.normalizePath(safePath);
 
       return {
         content: [
@@ -393,9 +468,9 @@ class AiAgentsMiyabiMCPServer {
             type: 'text',
             text: JSON.stringify({
               success: true,
-              source: filePath,
+              source: safeSourcePath,
               format,
-              taskData,
+              taskData: sanitizedTaskData,
               result: JSON.parse(result.content[0].text),
               timestamp: new Date().toISOString(),
             }, null, 2),
@@ -403,8 +478,13 @@ class AiAgentsMiyabiMCPServer {
         ],
       };
     } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
       const message = error instanceof Error ? error.message : String(error);
-      throw new McpError(ErrorCode.InternalError, `Failed to load task from file: ${message}`);
+      // エラーメッセージから機密情報を除去
+      const sanitizedMessage = this.securityManager.sanitizeLogContent(message);
+      throw new McpError(ErrorCode.InternalError, `Failed to load task from file: ${sanitizedMessage}`);
     }
   }
 

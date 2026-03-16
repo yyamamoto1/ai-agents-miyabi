@@ -2,8 +2,33 @@ import { spawn, exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
 import fs from 'fs/promises';
+import { SecurityManager } from './security.js';
 
 const execAsync = promisify(exec);
+
+/**
+ * シェルコマンド用の安全なエスケープ関数
+ * コマンドインジェクション攻撃を防ぐ
+ */
+function escapeShellArg(arg: string): string {
+  // シングルクォートで囲み、内部のシングルクォートをエスケープ
+  return `'${arg.replace(/'/g, "'\\''")}'`;
+}
+
+/**
+ * tmuxセッション名/ウィンドウ名として安全な文字列に変換
+ * 英数字、ハイフン、アンダースコアのみ許可
+ */
+function sanitizeTmuxName(name: string): string {
+  return name.replace(/[^a-zA-Z0-9_-]/g, '_').substring(0, 50);
+}
+
+/**
+ * エージェントIDのバリデーション
+ */
+function isValidAgentId(agentId: string): boolean {
+  return /^[a-zA-Z0-9_-]+$/.test(agentId) && agentId.length <= 100;
+}
 
 export interface Agent {
   id: string;
@@ -43,9 +68,11 @@ export class AgentOrchestrator {
   private agents: Agent[] = [];
   private activeTeams: Map<string, AgentTeam> = new Map();
   private agentCatalogPath: string;
+  private securityManager: SecurityManager;
 
   constructor() {
     this.agentCatalogPath = path.join(process.cwd(), 'src', 'agents');
+    this.securityManager = new SecurityManager();
     this.loadAgentCatalog();
   }
 
@@ -189,16 +216,34 @@ export class AgentOrchestrator {
    */
   private async launchAgentInTmux(agent: Agent, sessionId: string): Promise<void> {
     try {
-      // エージェント用のペイン作成
-      const paneCmd = `tmux new-window -t ${sessionId} -n ${agent.id}`;
+      // エージェントIDのバリデーション
+      if (!isValidAgentId(agent.id)) {
+        throw new Error(`Invalid agent ID: ${agent.id}`);
+      }
+
+      // セッションIDとエージェントIDをサニタイズ
+      const safeSessionId = sanitizeTmuxName(sessionId);
+      const safeAgentId = sanitizeTmuxName(agent.id);
+
+      // エージェント用のペイン作成（サニタイズ済みの名前を使用）
+      const paneCmd = `tmux new-window -t ${escapeShellArg(safeSessionId)} -n ${escapeShellArg(safeAgentId)}`;
       await execAsync(paneCmd);
 
       // エージェントスクリプト実行
+      // agentPathは内部で生成されるため、path.joinで安全に構築
       const agentPath = path.join(this.agentCatalogPath, agent.id);
-      const executeCmd = `tmux send-keys -t ${sessionId}:${agent.id} 'cd "${agentPath}" && npx miyabi agent start ${agent.id}' C-m`;
+
+      // パスが想定ディレクトリ内にあることを確認（パストラバーサル防止）
+      const resolvedPath = path.resolve(agentPath);
+      const resolvedCatalogPath = path.resolve(this.agentCatalogPath);
+      if (!resolvedPath.startsWith(resolvedCatalogPath)) {
+        throw new Error(`Invalid agent path: path traversal detected`);
+      }
+
+      const executeCmd = `tmux send-keys -t ${escapeShellArg(safeSessionId + ':' + safeAgentId)} ${escapeShellArg('cd ' + escapeShellArg(agentPath) + ' && npx miyabi agent start ' + escapeShellArg(agent.id))} C-m`;
       await execAsync(executeCmd);
 
-      agent.tmuxPane = `${sessionId}:${agent.id}`;
+      agent.tmuxPane = `${safeSessionId}:${safeAgentId}`;
       console.log(`Agent ${agent.name} launched in tmux pane: ${agent.tmuxPane}`);
     } catch (error) {
       console.error(`Failed to launch agent ${agent.name}:`, error);
@@ -257,21 +302,32 @@ export class AgentOrchestrator {
     }
 
     try {
-      // タスクをエージェントに送信
-      const taskCmd = `tmux send-keys -t ${agent.tmuxPane} '${task}' C-m`;
+      // タスク内容をサニタイズ（機密情報のマスク化）
+      const sanitizedTask = this.securityManager.sanitizeTaskContent(task);
+
+      // tmuxペイン名の検証（フォーマット: sessionId:agentId）
+      if (!/^[a-zA-Z0-9_-]+:[a-zA-Z0-9_-]+$/.test(agent.tmuxPane)) {
+        throw new Error(`Invalid tmux pane format: ${agent.tmuxPane}`);
+      }
+
+      // タスクをエージェントに送信（エスケープ処理）
+      const taskCmd = `tmux send-keys -t ${escapeShellArg(agent.tmuxPane)} ${escapeShellArg(String(sanitizedTask))} C-m`;
       await execAsync(taskCmd);
 
       // 結果待機（簡易実装）
       await new Promise(resolve => setTimeout(resolve, 2000));
 
       // 実行結果を取得
-      const outputCmd = `tmux capture-pane -t ${agent.tmuxPane} -p`;
+      const outputCmd = `tmux capture-pane -t ${escapeShellArg(agent.tmuxPane)} -p`;
       const { stdout } = await execAsync(outputCmd);
+
+      // 出力をサニタイズ
+      const sanitizedOutput = this.securityManager.sanitizeAgentOutput(stdout.trim());
 
       return {
         agentId: agent.id,
         agentName: agent.name,
-        output: stdout.trim(),
+        output: sanitizedOutput,
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
@@ -313,8 +369,14 @@ export class AgentOrchestrator {
     for (const agent of this.agents) {
       if (agent.status === 'running' && agent.tmuxPane) {
         try {
-          // エージェント停止
-          await execAsync(`tmux send-keys -t ${agent.tmuxPane} 'exit' C-m`);
+          // tmuxペイン名の検証
+          if (!/^[a-zA-Z0-9_-]+:[a-zA-Z0-9_-]+$/.test(agent.tmuxPane)) {
+            console.error(`Invalid tmux pane format for agent ${agent.name}: ${agent.tmuxPane}`);
+            continue;
+          }
+
+          // エージェント停止（エスケープ処理）
+          await execAsync(`tmux send-keys -t ${escapeShellArg(agent.tmuxPane)} 'exit' C-m`);
           agent.status = 'idle';
           agent.tmuxPane = undefined;
           terminatedAgents.push(agent.name);

@@ -1,6 +1,7 @@
 import { writeFile, appendFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
+import { SecurityManager } from './security.js';
 
 export interface LogEntry {
   timestamp: string;
@@ -37,12 +38,14 @@ export class Logger {
   private logsDir: string;
   private outputsDir: string;
   private dataDir: string;
+  private securityManager: SecurityManager;
 
   constructor(baseDir: string = process.cwd()) {
     this.logsDir = path.join(baseDir, 'logs');
     this.outputsDir = path.join(baseDir, 'outputs');
     this.dataDir = path.join(baseDir, 'data');
-    
+    this.securityManager = new SecurityManager();
+
     this.ensureDirectories();
   }
 
@@ -69,12 +72,16 @@ export class Logger {
    * ログエントリ記録
    */
   async log(level: LogEntry['level'], component: string, message: string, data?: any, sessionId?: string, agentId?: string) {
+    // メッセージとデータのサニタイズ
+    const sanitizedMessage = this.securityManager.sanitizeLogContent(message);
+    const sanitizedData = data ? this.securityManager.sanitizeTaskContent(data) : undefined;
+
     const entry: LogEntry = {
       timestamp: new Date().toISOString(),
       level,
       component,
-      message,
-      data,
+      message: sanitizedMessage,
+      data: sanitizedData,
       sessionId,
       agentId,
     };
@@ -218,8 +225,12 @@ export class Logger {
     output: string,
     success: boolean
   ) {
+    // コマンドと出力をサニタイズ
+    const sanitizedCommand = this.securityManager.sanitizeLogContent(command);
+    const sanitizedOutput = this.securityManager.sanitizeAgentOutput(output);
+
     await this.log('info', 'AgentExecution', `Agent ${agentId} executed command`, {
-      command: command.substring(0, 100) + '...',
+      command: sanitizedCommand.substring(0, 100) + '...',
       outputLength: output.length,
       success,
     }, sessionId, agentId);
@@ -232,17 +243,17 @@ export class Logger {
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const outputFile = path.join(agentDir, `${agentId}-${timestamp}.txt`);
-    
+
     const outputContent = [
       `=== Agent Execution Log ===`,
       `Agent: ${agentId}`,
       `Session: ${sessionId}`,
       `Timestamp: ${new Date().toISOString()}`,
-      `Command: ${command}`,
+      `Command: ${sanitizedCommand}`,
       `Success: ${success}`,
       ``,
       `=== Output ===`,
-      output,
+      sanitizedOutput,
       ``,
       `=== End of Output ===`,
     ].join('\n');
@@ -254,6 +265,9 @@ export class Logger {
    * セッション情報保存
    */
   async logSessionInfo(sessionId: string, sessionData: any) {
+    // セッションデータをサニタイズ
+    const sanitizedSessionData = this.securityManager.sanitizeTaskContent(sessionData);
+
     await this.log('info', 'SessionManager', `Session info updated: ${sessionId}`, {
       agentCount: sessionData.agents?.length || 0,
       status: sessionData.status,
@@ -263,7 +277,7 @@ export class Logger {
     await writeFile(sessionFile, JSON.stringify({
       sessionId,
       timestamp: new Date().toISOString(),
-      ...sessionData,
+      ...sanitizedSessionData,
     }, null, 2));
   }
 
@@ -271,11 +285,20 @@ export class Logger {
    * エラーログ
    */
   async logError(component: string, error: Error | string, sessionId?: string, agentId?: string) {
-    const errorData = error instanceof Error ? {
+    const rawErrorData = error instanceof Error ? {
       name: error.name,
       message: error.message,
       stack: error.stack,
-    } : { message: error };
+    } : { message: String(error) };
+
+    // エラーデータをサニタイズ（スタックトレースに含まれるパス情報などを除去）
+    const errorData = {
+      name: rawErrorData.name,
+      message: this.securityManager.sanitizeLogContent(rawErrorData.message),
+      stack: rawErrorData.stack
+        ? this.securityManager.normalizePath(this.securityManager.sanitizeLogContent(rawErrorData.stack))
+        : undefined,
+    };
 
     await this.log('error', component, `Error occurred: ${errorData.message}`, errorData, sessionId, agentId);
   }
